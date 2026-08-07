@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  inference-server:
+    image: roboflow/roboflow-inference-server-cpu:latest
+    ports:
+      - "9001:9001"
+    environment:
+      - ROBOFLOW_API_KEY=${ROBOFLOW_API_KEY}
+
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - inference-server
+    environment:
+      - ROBOFLOW_API_KEY=${ROBOFLOW_API_KEY}
+      - INFERENCE_SERVER_URL=http://inference-server:9001

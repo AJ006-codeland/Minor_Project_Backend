@@ -7,13 +7,14 @@ API_KEY = os.environ.get("ROBOFLOW_API_KEY", "")
 WORKSPACE_NAME = "aayushmas-workspace-k2yif"
 WORKFLOW_ID = "general-segmentation-api-4"
 CLASSES = ["Leaf"]
-MIN_AREA_RATIO = 0.05
+MIN_AREA_RATIO = 0.005
+
+INFERENCE_SERVER_URL = os.environ.get("INFERENCE_SERVER_URL", "http://localhost:9001")
 
 client = InferenceHTTPClient(
-    api_url="http://localhost:9001",
+    api_url=INFERENCE_SERVER_URL,
     api_key=API_KEY
 )
-
 
 def get_largest_leaf_crop(image_path, min_area_ratio=MIN_AREA_RATIO):
     """

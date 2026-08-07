@@ -1,5 +1,6 @@
 import os
 import tempfile
+import cv2
 import numpy as np
 from PIL import Image
 from rest_framework.decorators import api_view
@@ -40,6 +41,8 @@ def predict_disease(request):
         if leaf_crop is None:
             return Response({'error': 'No leaf detected in the image. Try a clearer photo.'}, status=422)
 
+        cv2.imwrite('/app/debug_last_crop.jpg', leaf_crop)
+
         input_array = preprocess_image_array(leaf_crop)
 
         detector_config = apps.get_app_config('detector')
@@ -58,4 +61,4 @@ def predict_disease(request):
         })
 
     finally:
-        os.remove(tmp_path)  # clean up temp file regardless of success/failure
+        os.remove(tmp_path)
