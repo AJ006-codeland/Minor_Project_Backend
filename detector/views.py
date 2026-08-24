@@ -92,3 +92,18 @@ def get_history(request):
         for entry in history
     ]
     return Response(data)
+
+
+@api_view(['DELETE'])
+def delete_prediction(request, pk):
+    try:
+        entry = PredictionHistory.objects.get(pk=pk)
+    except PredictionHistory.DoesNotExist:
+        return Response({'error': 'Prediction not found.'}, status=404)
+
+    # Delete the image file from disk too, not just the DB row
+    if entry.image:
+        entry.image.delete(save=False)
+
+    entry.delete()
+    return Response(status=204)
