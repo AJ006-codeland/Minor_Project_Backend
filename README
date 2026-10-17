@@ -1,3 +1,154 @@
+# 🍇 Grape Leaf Disease Detection: Backend
+
+A Django REST backend that powers an AI-based grape leaf disease detection system. It accepts a leaf image, runs segmentation and disease classification, and returns the result to the frontend.
+
+Built as a minor project for the BEI program at Himalaya College of Engineering (IOE, Tribhuvan University).
+
+> **https://github.com/AJ006-codeland/Minor_Project_Frontend** [add link here]
+
+---
+
+## Overview
+
+Grape farmers often spot diseases late, after the damage has already spread. This backend is the engine behind a tool that lets a user upload a photo of a grape leaf and get a quick diagnosis.
+
+**How it works**
+
+1. The client uploads a leaf image to the API.
+2. The backend segments the leaf using the Roboflow API.
+3. The segmented leaf goes through a classification model (EfficientNetV2, trained with TensorFlow).
+4. The predicted disease and confidence score are returned as JSON and saved to the history.
+
+## Features
+
+- Image upload endpoint for leaf photos
+- Leaf segmentation via Roboflow API integration
+- Disease classification using a fine-tuned EfficientNetV2 model
+- Prediction history stored in the database
+- Fully containerised with Docker and Docker Compose
+- Secrets kept in environment variables, never in the repo
+
+## Model Performance
+
+| Metric | Result |
+| --- | --- |
+| Validation accuracy (Phase 1) | ~99% |
+| Architecture | EfficientNetV2 |
+| Framework | TensorFlow / Keras |
+
+Phase 2 fine-tuning is in progress. Update these numbers when it is done.
+
+## Tech Stack
+
+- **Backend:** Python, Django
+- **ML:** TensorFlow, Keras, EfficientNetV2
+- **Segmentation:** Roboflow API
+- **Containerisation:** Docker, Docker Compose
+- **Training:** Google Colab
+
+## Project Structure
+
+```
+.
+├── backend/            # Django project settings and configuration
+├── detector/           # App containing the detection logic and API views
+├── manage.py           # Django management script
+├── requirements.txt    # Python dependencies
+├── Dockerfile          # Image definition for the backend
+├── docker-compose.yml  # Service orchestration
+└── .env.example        # Template for environment variables
+```
+
+## Getting Started
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/) and Docker Compose
+- A [Roboflow](https://roboflow.com/) API key
+- Git
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/AJ006-codeland/<your-repo-name>.git
+cd <your-repo-name>
+```
+
+### 2. Set up environment variables
+
+Copy the example file and fill in your own values:
+
+```bash
+cp .env.example .env
+```
+
+```env
+SECRET_KEY=your_django_secret_key
+DEBUG=True
+ROBOFLOW_API_KEY=your_roboflow_api_key
+```
+
+> ⚠️ Never commit your real `.env` file. It is listed in `.gitignore`.
+
+### 3. Run with Docker
+
+```bash
+docker-compose up --build
+```
+
+The API will be available at `http://localhost:8000`.
+
+### Running without Docker
+
+```bash
+python -m venv myenv
+myenv\Scripts\activate        # Windows
+# source myenv/bin/activate   # macOS / Linux
+
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+
+## API Usage
+
+> Update the endpoint name below to match your `urls.py`.
+
+**Predict disease from a leaf image**
+
+```http
+POST /api/predict/
+Content-Type: multipart/form-data
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `image` | file | Photo of a grape leaf |
+
+**Example response**
+
+```json
+{
+  "disease": "Black Rot",
+  "confidence": 0.97
+}
+```
+
+## Roadmap
+
+- [x] Phase 1 model training
+- [ ] Phase 2 fine-tuning
+- [ ] Connect the mobile / web frontend
+- [ ] Deploy to a cloud server
+- [ ] Add IoT sensor data for smart plant monitoring
+
+## Author
+
+**Aayushma Joshi (AJ)**
+BEI student, Himalaya College of Engineering, IOE, Tribhuvan University
+GitHub: [@AJ006-codeland](https://github.com/AJ006-codeland)
+
+
 docker compose logs backend --tail 30
 netstat -ano | findstr :8000
 tasklist /FI "PID eq 3744" 
