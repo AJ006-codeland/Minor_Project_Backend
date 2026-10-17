@@ -1,0 +1,4 @@
+docker compose logs backend --tail 30
+netstat -ano | findstr :8000
+tasklist /FI "PID eq 3744" 
+taskkill /PID 4844 /F (FOR PYTHON.EXE)
